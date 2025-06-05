@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEC Clause 63.1 Time-Bar Calculator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>NEC Clause 63.1 Time-Bar Calculator</h1>
+    <div class="form-group">
+      <label for="awareDate">Date aware of event:</label>
+      <input type="date" id="awareDate">
+    </div>
+    <div class="form-group">
+      <label for="notifyDate">Date notice given:</label>
+      <input type="date" id="notifyDate">
+    </div>
+    <div class="form-group">
+      <label for="limitWeeks">Notification time-bar (weeks):</label>
+      <input type="number" id="limitWeeks" value="8" min="1">
+    </div>
+    <button id="calculateBtn">Calculate</button>
+    <div id="result"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
