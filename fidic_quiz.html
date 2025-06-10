@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FIDIC Golden Principles Self‑Test Quiz</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family:Arial,Helvetica,sans-serif;margin:20px;line-height:1.6;background:#f5f7fa;}
+h1{text-align:center;color:#0a3d62;margin-bottom:10px;}
+.question-card{background:#fff;padding:20px;margin:10px 0;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,.1);}
+.question-card strong{color:#1e3799;}
+.options label{display:block;margin:5px 0;cursor:pointer;}
+button#submit{display:block;margin:30px auto 0;font-size:18px;padding:12px 30px;border:none;border-radius:6px;background:#1e90ff;color:#fff;box-shadow:0 2px 4px rgba(0,0,0,.2);cursor:pointer;}
+button#submit:hover{background:#0c7cd5;}
+#results{margin-top:40px;padding:25px;border-radius:8px;display:none;}
+#results.correct{background:#e8fbe8;border:1px solid #b2e6b2;}
+#results.wrong{background:#ffecec;border:1px solid #f5b5b5;}
+.correct{color:green;}
+.wrong{color:red;}
+</style>
+</head>
+<body>
+<h1>FIDIC Golden Principles<br>Self‑Test Quiz</h1>
+<p style="text-align:center">Multiple‑choice questions • Good luck!</p>
+<div id="quiz"></div>
+<button id="submit">Show Results</button>
+<div id="results"></div>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+
+const quizData = [
+  {
+    q: "Which Golden Principle preserves the independence of the Engineer as decision‑maker?",
+    options: ["GP1","GP2","GP3","GP4"],
+    answer: 0,
+    reason: "GP1 states that roles and obligations must remain as set out in the General Conditions, including the Engineer’s impartial role."
+  },
+  {
+    q: "Which GP insists that Particular Conditions must be drafted clearly with no hidden traps?",
+    options: ["GP2","GP4","GP5","GP1"],
+    answer: 0,
+    reason: "GP2 requires that all departures from the General Conditions be clear and unambiguous."
+  },
+  {
+    q: "The maxim \u201Crisk follows control\u201D best describes the aim of which GP?",
+    options: ["GP4","GP3","GP2","GP5"],
+    answer: 1,
+    reason: "GP3 prohibits upsetting the balanced allocation of risk and reward."
+  },
+  {
+    q: "Which GP deals primarily with the reasonableness of time periods in the contract?",
+    options: ["GP1","GP4","GP3","GP5"],
+    answer: 1,
+    reason: "GP4 requires that notice periods, certification times, etc., must stay realistic for the project scale."
+  },
+  {
+    q: "GP5 mandates the use of which dispute‑resolution body before arbitration?",
+    options: ["DAAB / DAB","ICC Tribunal","Employer\u2019s Board","Expert Determination"],
+    answer: 0,
+    reason: "GP5 says disputes must pass through a standing or ad-hoc DAAB first, unless prohibited by law."
+  },
+  {
+    q: "Allowing the Employer to veto an Engineer\u2019s determination would most clearly breach\u2026",
+    options: ["GP1","GP2","GP3","GP4"],
+    answer: 0,
+    reason: "Such a veto changes the Engineer\u2019s role in the General Conditions, violating GP1."
+  },
+  {
+    q: "Cutting the Contractor\u2019s claim-notice period from 28 days to 5 days is likely a breach of\u2026",
+    options: ["GP4","GP2","GP3","GP5"],
+    answer: 0,
+    reason: "Unreasonably short time frames offend GP4."
+  },
+  {
+    q: "Deleting the DAAB clause altogether runs contrary to\u2026",
+    options: ["GP5","GP3","GP2","GP1"],
+    answer: 0,
+    reason: "GP5 requires a DAAB to precede arbitration."
+  },
+  {
+    q: "Hiding a crucial amendment in a technical appendix instead of in Particular Conditions offends\u2026",
+    options: ["GP2","GP4","GP1","GP3"],
+    answer: 0,
+    reason: "GP2 requires clarity and transparency."
+  },
+  {
+    q: "Transferring all unforeseeable ground-condition risk to the Contractor under the Red Book conflicts with\u2026",
+    options: ["GP3","GP1","GP4","GP5"],
+    answer: 0,
+    reason: "Risk misallocation that ignores control violates GP3."
+  },
+  {
+    q: "Extending the Engineer\u2019s payment-certificate time from 28 days to 90 days most threatens\u2026",
+    options: ["GP4","GP2","GP3","GP5"],
+    answer: 0,
+    reason: "Excessively long certification periods can strangle cash-flow and breach GP4\u2019s reasonableness test."
+  },
+  {
+    q: "Failing to mark changes in the PCs and burying them in emailed clarifications mainly breaches\u2026",
+    options: ["GP2","GP1","GP5","GP4"],
+    answer: 0,
+    reason: "GP2 demands transparent and unambiguous presentation of changes."
+  },
+  {
+    q: "Selecting the wrong FIDIC form and then rewriting it to fit your project is often a warning sign for breaking\u2026",
+    options: ["GP3","GP1","GP2","GP4"],
+    answer: 0,
+    reason: "Picking the wrong book usually leads to risk-allocation tweaks that violate GP3."
+  },
+  {
+    q: "True or False: GP1 allows the Employer to take over the Engineer\u2019s authority provided both parties agree.",
+    options: ["True","False","Only with DAAB consent","Only in Silver Book"],
+    answer: 1,
+    reason: "GP1 is inviolable; reallocating Engineer duties undermines the contractual DNA."
+  },
+  {
+    q: "Which GP is BEST described as the \u2018contractual brand-integrity\u2019 principle?",
+    options: ["GP1","GP5","GP2","GP3"],
+    answer: 0,
+    reason: "GP1 ensures the contract can still be called \u2018FIDIC\u2019 by maintaining the role structure."
+  },
+  {
+    q: "A project deletes standing DAAB but allows ad-hoc appointment after a dispute arises. This partial deletion is a risk to\u2026",
+    options: ["GP5","GP4","GP2","GP3"],
+    answer: 0,
+    reason: "Even an ad-hoc-only board erodes the preventive purpose GP5 intends."
+  },
+  {
+    q: "Reasonable Notice Periods are primarily covered under which clause number in FIDIC 2017 Red Book that GP4 seeks to protect?",
+    options: ["20.2","14.7","1.1","13.1"],
+    answer: 0,
+    reason: "Clause 20.2 sets out the 28-day notice, aligning with GP4."
+  },
+  {
+    q: "In the Golden Principles hierarchy, which GP would be evaluated FIRST by a tribunal when assessing a hidden amendment that shifts risk?",
+    options: ["GP2","GP3","GP1","GP5"],
+    answer: 0,
+    reason: "Tribunals establish clarity (GP2) before content (GP3)."
+  },
+  {
+    q: "Which of the following best summarises GP5\u2019s economic rationale?",
+    options: ["Early expert decision cheaper than arbitration","Time bars must be fair","Engineer must be independent","Risk follows reward"],
+    answer: 0,
+    reason: "DAAB delivers quicker, cheaper dispute avoidance."
+  },
+  {
+    q: "If an Employer instructs the Engineer to certify 110% of actual work to help Contractor cashflow, which GP is indirectly at risk?",
+    options: ["GP1","GP4","GP2","GP3"],
+    answer: 0,
+    reason: "Engineer\u2019s independence could be compromised, engaging GP1."
+  }
+];
+
+const quizContainer = document.getElementById('quiz');
+const resultsContainer = document.getElementById('results');
+const submitButton = document.getElementById('submit');
+
+function buildQuiz(){
+  const output = [];
+  quizData.forEach((currentQuestion, questionNumber) => {
+    const options = currentQuestion.options.map((option, idx) => `
+      <label>
+        <input type="radio" name="question${questionNumber}" value="${idx}">
+        ${option}
+      </label>`).join('');
+    output.push(`<div class="question-card"><strong>Q${questionNumber+1}. ${currentQuestion.q}</strong><div class="options">${options}</div></div>`);
+  });
+  quizContainer.innerHTML = output.join('');
+}
+
+function showResults(){
+  const answerContainers = quizContainer.querySelectorAll('.options');
+  let numCorrect = 0;
+  quizData.forEach((currentQuestion, questionNumber) => {
+    const selector = `input[name=question${questionNumber}]:checked`;
+    const userAnswer = (answerContainers[questionNumber].querySelector(selector) || {}).value;
+    if(parseInt(userAnswer) === currentQuestion.answer){
+      numCorrect++;
+    }
+  });
+  resultsContainer.className = numCorrect === quizData.length ? 'correct' : 'wrong';
+  resultsContainer.style.display = 'block';
+  resultsContainer.innerHTML = `You scored ${numCorrect} out of ${quizData.length}.`;
+}
+
+buildQuiz();
+submitButton.addEventListener('click', showResults);
+});
+</script>
+</body>
+</html>
